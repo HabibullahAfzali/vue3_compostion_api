@@ -12,13 +12,11 @@
   </div>
 </template>
 
+ <!-- Composition Api Scripts -->
 <script setup>
 import axios from 'axios'
 import { ref, onMounted } from 'vue';
-
-
 const userList = ref([]);
-
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8081/user');
@@ -28,10 +26,11 @@ onMounted(async () => {
   }
 });
 </script>
-
 <style scoped>
 #user {
   font-family: Arial, sans-serif;
+  background-color: #64c1ad;
+  display: block;
 }
 
 ul {
@@ -42,7 +41,7 @@ ul {
 li {
   margin-bottom: 15px;
   padding: 10px;
-  border: 1px solid #ddd;
+  border-bottom: 1px solid #0c0c0c;
 }
 
 li p {

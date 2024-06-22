@@ -9,28 +9,53 @@
         <p><strong>Email:</strong> {{ user.email }}</p>
       </li>
     </ul>
+    <div id="search">
+      <h2>Search User by ID</h2>
+      <input v-model="searchId" type="text" placeholder="Enter User ID" />
+      <button @click="fetchUserById">Search</button>
+    </div>
+    <div v-if="selectedUser" id="user-details">
+      <h2>User Details</h2>
+      <p><strong>ID:</strong> {{ selectedUser.id }}</p>
+      <p><strong>Name:</strong> {{ selectedUser.name }}</p>
+      <p><strong>Age:</strong> {{ selectedUser.age }}</p>
+      <p><strong>Email:</strong> {{ selectedUser.email }}</p>
+    </div>
   </div>
 </template>
 
  <!-- Composition Api Scripts -->
 <script setup>
-import axios from 'axios'
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
+import userData from "../services/api-data-service"
 const userList = ref([]);
-onMounted(async () => {
+const selectUser = ref(null);
+const fetchUsers =async () => {
   try {
-    const response = await axios.get('http://localhost:8081/user');
+    const response = await userData.getUser();
     userList.value = response.data
   } catch (error) {
     console.error('Error fetching registered users:', error);
   }
-});
+};
+const fetchUserById = async (userId) => {
+
+  try {
+    const response = await userData.getUserById(userId);
+    selectUser.value = response.data;
+  } catch (error) {
+    console.error(`Error fetching user with ID ${userId}:`, error);
+  }
+};
+fetchUsers();
 </script>
+
 <style scoped>
 #user {
   font-family: Arial, sans-serif;
   background-color: #64c1ad;
-  display: block;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 ul {
@@ -46,5 +71,33 @@ li {
 
 li p {
   margin: 0;
+}
+
+#search {
+  margin-top: 20px;
+}
+
+#search input {
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#search button {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#search button:hover {
+  background-color: #0056b3;
+}
+
+#user-details {
+  margin-top: 20px;
 }
 </style>

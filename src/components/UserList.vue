@@ -29,7 +29,8 @@
 import { ref } from 'vue';
 import userData from "../services/api-data-service"
 const userList = ref([]);
-const selectUser = ref(null);
+const selectedUser = ref(null);
+const searchId = ref('');
 const fetchUsers =async () => {
   try {
     const response = await userData.getUser();
@@ -38,13 +39,16 @@ const fetchUsers =async () => {
     console.error('Error fetching registered users:', error);
   }
 };
-const fetchUserById = async (userId) => {
-
+const fetchUserById = async () => {
   try {
-    const response = await userData.getUserById(userId);
-    selectUser.value = response.data;
+    if (searchId.value) {
+      const response = await userData.getUserById(searchId.value);
+      selectedUser.value = response.data;
+    } else {
+      console.error('Please enter a valid user ID.');
+    }
   } catch (error) {
-    console.error(`Error fetching user with ID ${userId}:`, error);
+    console.error(`Error fetching user with ID ${searchId.value}:`, error);
   }
 };
 fetchUsers();
